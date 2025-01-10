@@ -1,49 +1,17 @@
-import { useState, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 
-import Header from "./components/Header";
-import CategoriesList from "./components/CategoriesList";
-import RecipeList from "./components/RecipeList";
-import { fetchData } from "./http";
+import Home from "./pages/Home";
+import RecipeDetails from "./pages/RecipeDetails";
 
 const App = () => {
-  const [ recipes, setRecipes ] = useState([]);
-  const [ selectedCategory, setSelectedCategory ] = useState({
-    id: 3,
-    description: 'Dessert',
-  });
-
-  useEffect(() => {
-    async function fetchRecipes() {
-      try {
-        const recipesData = await fetchData('filter', `c=${ selectedCategory.description }`);
-
-        setRecipes(recipesData.meals);
-      } catch(error) {
-
-      }
-    };
-    fetchRecipes();
-  }, [ selectedCategory ]);
-
-  const handleCategorySelection = (category) => {
-    setSelectedCategory({ 
-      id: +category.idCategory,
-      description: category.strCategory,
-    });
-  };
+  
 
   return (
     <>
-      <Header />
-      <section className="pt-8 px-8 flex flex-row">
-        <CategoriesList 
-          selectedCategory={ selectedCategory }
-          onSelect={ handleCategorySelection }
-        />
-        <RecipeList 
-          recipes={ recipes }
-        />
-      </section>
+      <Routes>
+        <Route path="/" element={ <Home /> } />
+        <Route path="/recipe" element={ <RecipeDetails /> } />
+      </Routes>
     </>
   );
 }
