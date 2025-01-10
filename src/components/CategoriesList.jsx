@@ -12,10 +12,9 @@ const CategoriesList = ({ selectedCategory, onSelect }) => {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const categoriesData = await fetchData();
-        console.log(categoriesData);
+        const categoriesData = await fetchData('categories');
 
-        setCategories(categoriesData);
+        setCategories(categoriesData.categories);
       } catch (error) {
         // console.log(error.message);
       }
@@ -38,11 +37,10 @@ const CategoriesList = ({ selectedCategory, onSelect }) => {
             }
 
             return (
-              <li>
+              <li key={category.idCategory}>
                 <CategoryButton
-                  key={category.idCategory}
                   className={cssClass}
-                  onClick={() => onSelect(category.idCategory)}
+                  onClick={() => onSelect(category)}
                 >
                     <div className="flex flex-row items-center gap-2">
                         <img src={ category.strCategoryThumb } className="w-11 h-full" />
