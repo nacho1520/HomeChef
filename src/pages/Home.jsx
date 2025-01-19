@@ -11,9 +11,11 @@ const Home = () => {
     id: 3,
     description: "Dessert",
   });
+  const [ isFetching, setIsFetching ] = useState(false);
 
   useEffect(() => {
     async function fetchRecipes() {
+      setIsFetching(true);
       try {
         const recipesData = await fetchData(
           "filter",
@@ -21,7 +23,10 @@ const Home = () => {
         );
 
         setRecipes(recipesData.meals);
-      } catch (error) {}
+        setIsFetching(false);
+      } catch (error) {
+
+      }
     }
     fetchRecipes();
   }, [selectedCategory]);
@@ -41,7 +46,12 @@ const Home = () => {
           selectedCategory={selectedCategory}
           onSelect={handleCategorySelection}
         />
-        <RecipeList recipes={recipes} />
+        {
+          !isFetching && <RecipeList recipes={recipes} />
+        }
+        {
+          isFetching && <p>Cargando...</p>
+        }
       </section>
     </>
   );
