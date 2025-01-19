@@ -36,7 +36,7 @@ const CategoriesList = ({ selectedCategory, onSelect }) => {
       <ul className="pt-8 flex flex-col gap-3">
         {categories.length !== 0 &&
           categories.map((category) => {
-            
+
             return (
               <li key={category.idCategory}>
                 <CategoryButton
@@ -44,14 +44,14 @@ const CategoriesList = ({ selectedCategory, onSelect }) => {
                   selectedCategory={ selectedCategory }
                   onClick={() => onSelect(category)}
                 >
-                  <div className="flex flex-row items-center gap-2">
+                  <div className="flex flex-row h-full items-center relative overflow-hidden">
                     <img
-                      src={category.strCategoryThumb}
-                      className="w-11 h-full"
-                    />
-                    <p className="text-xs font-semibold">
-                      {category.strCategory}
-                    </p>
+                        src={category.strCategoryThumb}
+                        className="w-[87px] h-[55px] absolute -left-8"
+                      />
+                      <p className="ml-16 text-xs font-semibold">
+                        {category.strCategory}
+                      </p>
                   </div>
                 </CategoryButton>
               </li>
