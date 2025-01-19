@@ -11,7 +11,7 @@ const RecipeList = ({ recipes }) => {
     };
     
     return(
-        <div className="grid grid-cols-3 gap-3 w-2/3">
+        <div className="grid grid-cols-3 gap-3 w-full">
             { recipes.length !== 0 && recipes.map((recipe) => (
                     <RecipeCard 
                         key={ recipe.idMeal } 

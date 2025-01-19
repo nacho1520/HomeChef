@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import CategoriesList from "../components/CategoriesList";
 import RecipeList from "../components/RecipeList";
+import SearchBar from "../components/SearchBar";
 import { fetchData } from "../http";
 
 const Home = () => {
@@ -46,12 +47,17 @@ const Home = () => {
           selectedCategory={selectedCategory}
           onSelect={handleCategorySelection}
         />
-        {
-          !isFetching && <RecipeList recipes={recipes} />
-        }
-        {
-          isFetching && <p>Cargando...</p>
-        }
+        <div className="w-2/3 flex flex-col">
+          <div className="flex flex-row mb-10">
+            <SearchBar />
+          </div>
+            {
+              !isFetching && <RecipeList recipes={recipes} />
+            }
+            {
+              isFetching && <p>Cargando...</p>
+            }
+          </div> 
       </section>
     </>
   );
