@@ -7,19 +7,21 @@ import SearchBar from "../components/SearchBar";
 import Dropdown from "../components/Dropdown";
 import { fetchData } from "../http";
 
-const Home = () => {
-  const [recipes, setRecipes] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState({
+const defaultState = {
+  category: {
     id: 3,
     description: "Dessert",
-  });
-  const [ filterState, setFilterState ] = useState({
-    searchQuery: '',
-    sortQuery: {
-      value: 'strMeal',
-      label: 'Name'
-    }
-  });
+  },
+  searchQuery: '',
+  sortQuery: {
+    value: 'strMeal',
+    label: 'Name'
+  }
+};
+
+const Home = () => {
+  const [recipes, setRecipes] = useState([]);
+  const [ filterState, setFilterState ] = useState(defaultState);
   const [ isFetching, setIsFetching ] = useState(false);
 
   useEffect(() => {
@@ -28,7 +30,7 @@ const Home = () => {
       try {
         const recipesData = await fetchData(
           "filter",
-          `c=${selectedCategory.description}`
+          `c=${ filterState.category.description }`
         );
 
         setRecipes(recipesData.meals);
@@ -38,7 +40,7 @@ const Home = () => {
       }
     }
     fetchRecipes();
-  }, [selectedCategory]);
+  }, [filterState.category]);
 
   useEffect(() => {
     async function fetchRecipes() {
@@ -65,9 +67,14 @@ const Home = () => {
   }, [filterState.searchQuery]);
 
   const handleCategorySelection = (category) => {
-    setSelectedCategory({
-      id: +category.idCategory,
-      description: category.strCategory,
+    setFilterState((prevState) => {
+      return {
+        ...prevState,
+        category: {
+          id: +category.idCategory,
+          description: category.strCategory,
+        }
+      };
     });
   };
 
@@ -76,8 +83,8 @@ const Home = () => {
       <Header />
       <section className="pt-8 px-8 flex flex-row justify-between">
         <CategoriesList
-          selectedCategory={selectedCategory}
-          onSelect={handleCategorySelection}
+          selectedCategory={ filterState.category }
+          onSelect={ handleCategorySelection }
         />
         <div className="w-2/3 flex flex-col">
           <div className="w-full flex flex-row justify-between mb-10">
