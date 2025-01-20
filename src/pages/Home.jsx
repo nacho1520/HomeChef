@@ -70,11 +70,21 @@ const Home = () => {
     setFilterState((prevState) => {
       return {
         ...prevState,
+        searchQuery: '',
         category: {
           id: +category.idCategory,
           description: category.strCategory,
         }
       };
+    });
+  };
+
+  const handleSearchInput = (value) => {
+    setFilterState(prevState => {
+      return {
+        ...prevState,
+        searchQuery: value,
+      }
     });
   };
 
@@ -90,14 +100,7 @@ const Home = () => {
           <div className="w-full flex flex-row justify-between mb-10">
             <SearchBar 
               userInput={ filterState.searchQuery }
-              onChange={ (event) => {
-                setFilterState(prevState => {
-                  return {
-                    ...prevState,
-                    searchQuery: event.target.value,
-                  }
-                });
-              }}
+              onChange={ (event) => handleSearchInput(event.target.value) }
             /> 
             <Dropdown 
               selectedValue={ filterState.sortQuery.label }
