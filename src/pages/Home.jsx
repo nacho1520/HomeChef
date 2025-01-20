@@ -12,17 +12,28 @@ const defaultState = {
     id: 3,
     description: "Dessert",
   },
-  searchQuery: '',
+  searchQuery: "",
   sortQuery: {
-    value: 'strMeal',
-    label: 'Name'
-  }
+    id: "strMeal",
+    value: "Name",
+  },
 };
+
+const sortOptions = [
+  {
+    id: "strMeal",
+    value: "Name",
+  },
+  {
+    id: "idMeal",
+    value: "ID",
+  },
+];
 
 const Home = () => {
   const [recipes, setRecipes] = useState([]);
-  const [ filterState, setFilterState ] = useState(defaultState);
-  const [ isFetching, setIsFetching ] = useState(false);
+  const [filterState, setFilterState] = useState(defaultState);
+  const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
     async function fetchRecipes() {
@@ -30,14 +41,12 @@ const Home = () => {
       try {
         const recipesData = await fetchData(
           "filter",
-          `c=${ filterState.category.description }`
+          `c=${filterState.category.description}`
         );
 
         setRecipes(recipesData.meals);
         setIsFetching(false);
-      } catch (error) {
-
-      }
+      } catch (error) {}
     }
     fetchRecipes();
   }, [filterState.category]);
@@ -46,45 +55,63 @@ const Home = () => {
     async function fetchRecipes() {
       try {
         const recipesData = await fetchData(
-          'search',
-          `s=${ filterState.searchQuery }`
+          "search",
+          `s=${filterState.searchQuery}`
         );
         setRecipes(recipesData.meals);
-
-      } catch(error) {
-
-      }
+      } catch (error) {}
     }
     const searchTimer = setTimeout(() => {
-      if(filterState.searchQuery !== ''){
+      if (filterState.searchQuery !== "") {
         fetchRecipes();
       }
     }, 2000);
 
     return () => {
       clearTimeout(searchTimer);
-    }
+    };
   }, [filterState.searchQuery]);
+
+  useEffect(() => {
+    setRecipes((prevRecipes) => {
+      return prevRecipes.sort((a, b) =>
+        a[filterState.sortQuery.id] > b[filterState.sortQuery.id]
+          ? 1
+          : b[filterState.sortQuery.id] > a[filterState.sortQuery.id]
+          ? -1
+          : 0
+      );
+    });
+  }, [filterState.sortQuery]);
 
   const handleCategorySelection = (category) => {
     setFilterState((prevState) => {
       return {
         ...prevState,
-        searchQuery: '',
+        searchQuery: "",
         category: {
           id: +category.idCategory,
           description: category.strCategory,
-        }
+        },
       };
     });
   };
 
   const handleSearchInput = (value) => {
-    setFilterState(prevState => {
+    setFilterState((prevState) => {
       return {
         ...prevState,
         searchQuery: value,
-      }
+      };
+    });
+  };
+
+  const handleSortChange = (sortOption) => {
+    setFilterState((prevState) => {
+      return {
+        ...prevState,
+        sortQuery: sortOption,
+      };
     });
   };
 
@@ -93,26 +120,24 @@ const Home = () => {
       <Header />
       <section className="pt-8 px-8 flex flex-row justify-between">
         <CategoriesList
-          selectedCategory={ filterState.category }
-          onSelect={ handleCategorySelection }
+          selectedCategory={filterState.category}
+          onSelect={handleCategorySelection}
         />
         <div className="w-2/3 flex flex-col">
           <div className="w-full flex flex-row justify-between mb-10">
-            <SearchBar 
-              userInput={ filterState.searchQuery }
-              onChange={ (event) => handleSearchInput(event.target.value) }
-            /> 
-            <Dropdown 
-              selectedValue={ filterState.sortQuery.label }
+            <SearchBar
+              userInput={filterState.searchQuery}
+              onChange={(event) => handleSearchInput(event.target.value)}
+            />
+            <Dropdown
+              selectedValue={filterState.sortQuery}
+              values={sortOptions}
+              onSelectOption={(value) => handleSortChange(value)}
             />
           </div>
-            {
-              !isFetching && <RecipeList recipes={recipes} />
-            }
-            {
-              isFetching && <p>Cargando...</p>
-            }
-          </div> 
+          {!isFetching && <RecipeList recipes={recipes} />}
+          {isFetching && <p>Cargando...</p>}
+        </div>
       </section>
     </>
   );
