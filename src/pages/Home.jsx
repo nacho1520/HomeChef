@@ -30,6 +30,16 @@ const sortOptions = [
   },
 ];
 
+const sortData = (data, field) => {
+  return data.sort((a, b) =>
+    a[field] > b[field]
+      ? 1
+      : b[field] > a[field]
+      ? -1
+      : 0
+  );
+};
+
 const Home = () => {
   const [recipes, setRecipes] = useState([]);
   const [filterState, setFilterState] = useState(defaultState);
@@ -43,13 +53,15 @@ const Home = () => {
           "filter",
           `c=${filterState.category.description}`
         );
-
-        setRecipes(recipesData.meals);
+        const sortedRecipes = sortData(recipesData.meals, filterState.sortQuery.id);
+        setRecipes(sortedRecipes);
         setIsFetching(false);
       } catch (error) {}
     }
-    fetchRecipes();
-  }, [filterState.category]);
+    if (filterState.category.id !== null) {
+      fetchRecipes();
+    }
+  }, [filterState.category, filterState.sortQuery]);
 
   useEffect(() => {
     async function fetchRecipes() {
@@ -58,7 +70,17 @@ const Home = () => {
           "search",
           `s=${filterState.searchQuery}`
         );
-        setRecipes(recipesData.meals);
+        setFilterState((prevState) => {
+          return {
+            ...prevState,
+            category: {
+              id: null,
+              description: null,
+            },
+          };
+        });
+        const sortedRecipes = sortData(recipesData.meals, filterState.sortQuery.id); 
+        setRecipes(sortedRecipes);
       } catch (error) {}
     }
     const searchTimer = setTimeout(() => {
@@ -70,19 +92,7 @@ const Home = () => {
     return () => {
       clearTimeout(searchTimer);
     };
-  }, [filterState.searchQuery]);
-
-  useEffect(() => {
-    setRecipes((prevRecipes) => {
-      return prevRecipes.sort((a, b) =>
-        a[filterState.sortQuery.id] > b[filterState.sortQuery.id]
-          ? 1
-          : b[filterState.sortQuery.id] > a[filterState.sortQuery.id]
-          ? -1
-          : 0
-      );
-    });
-  }, [filterState.sortQuery]);
+  }, [filterState.searchQuery, filterState.sortQuery]);
 
   const handleCategorySelection = (category) => {
     setFilterState((prevState) => {
