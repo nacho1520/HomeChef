@@ -126,9 +126,9 @@ const Home = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col items-center">
       <Header />
-      <section className="pt-8 px-8 flex flex-row justify-between">
+      <section className="w-full p-8 flex flex-row justify-around">
         <CategoriesList
           selectedCategory={filterState.category}
           onSelect={handleCategorySelection}
@@ -149,7 +149,7 @@ const Home = () => {
           {isFetching && <p>Cargando...</p>}
         </div>
       </section>
-    </>
+    </div>
   );
 };
 

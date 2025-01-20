@@ -31,7 +31,7 @@ const CategoriesList = ({ selectedCategory, onSelect }) => {
   }, []);
 
   return (
-    <aside className="font-body">
+    <aside className="font-body w-1/3">
       <h2 className="font-title text-2xl font-semibold">Categories</h2>
       <ul className="pt-8 flex flex-col gap-3">
         {categories.length !== 0 &&
