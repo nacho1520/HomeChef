@@ -1,9 +1,11 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-
+import { RecipesContext } from "../store/recipes-context";
 import RecipeCard from "./RecipeCard";
 
-const RecipeList = ({ recipes }) => {
+const RecipeList = () => {
+    const { recipes } = useContext(RecipesContext);
     const navigate = useNavigate();
 
     const handleClick = (recipeId) => {

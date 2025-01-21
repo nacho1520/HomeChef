@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
+import { RecipesContext } from "../store/recipes-context.jsx";
 import { fetchData } from "../http.js";
 
 const CategoryButton = ({ category, selectedCategory, children, ...props }) => {
@@ -13,7 +14,8 @@ const CategoryButton = ({ category, selectedCategory, children, ...props }) => {
   return <button className={ cssClass } {...props}>{children}</button>;
 };
 
-const CategoriesList = ({ selectedCategory, onSelect }) => {
+const CategoriesList = () => {
+  const { categorySelected, selectCategory } = useContext(RecipesContext);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -41,8 +43,8 @@ const CategoriesList = ({ selectedCategory, onSelect }) => {
               <li key={category.idCategory}>
                 <CategoryButton
                   category={ category }
-                  selectedCategory={ selectedCategory }
-                  onClick={() => onSelect(category)}
+                  selectedCategory={ categorySelected }
+                  onClick={() => selectCategory(category)}
                 >
                   <div className="flex flex-row h-full items-center relative overflow-hidden">
                     <img

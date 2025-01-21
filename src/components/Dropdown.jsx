@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 
+import { RecipesContext } from "../store/recipes-context";
 import expandDown from "../assets/Expand_down.svg";
 
 const OptionButton = ({ selectedValue, value, ...props }) => {
@@ -21,7 +22,8 @@ const OptionButton = ({ selectedValue, value, ...props }) => {
     );
 };
 
-const Dropdown = ({ selectedValue, values, onSelectOption }) => {
+const Dropdown = ({ values }) => {
+  const { sortQuery, changeSortOrder   } = useContext(RecipesContext);
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -29,7 +31,7 @@ const Dropdown = ({ selectedValue, values, onSelectOption }) => {
   };
 
   const handleSelectOption = (option) => {
-    onSelectOption(option);
+    changeSortOrder(option);
     setOpen(false);
   };
 
@@ -48,7 +50,7 @@ const Dropdown = ({ selectedValue, values, onSelectOption }) => {
         onClick={handleClick}
       >
         <p className="font-body text-base font-medium text-[#0E1325]">
-          Sort by: { selectedValue.value }
+          Sort by: { sortQuery.value }
         </p>
         <img src={expandDown} />
       </button>
@@ -58,7 +60,7 @@ const Dropdown = ({ selectedValue, values, onSelectOption }) => {
             {values.map((value) => (
               <li>
                 <OptionButton 
-                    selectedValue={ selectedValue }
+                    selectedValue={ sortQuery }
                     value={ value }
                     onClick={ () => handleSelectOption(value) }
                 />
