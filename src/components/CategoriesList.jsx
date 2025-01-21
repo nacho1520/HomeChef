@@ -37,7 +37,7 @@ const CategoriesList = () => {
       <h2 className="font-title text-2xl font-semibold">Categories</h2>
       <ul className="pt-8 flex flex-col gap-3">
         {categories.length !== 0 &&
-          categories.map((category) => {
+          categories.slice(0,6).map((category) => {
 
             return (
               <li key={category.idCategory}>
