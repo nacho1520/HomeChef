@@ -25,11 +25,9 @@ const Home = () => {
           <CategoriesList />
           <div className="w-2/3 flex flex-col">
             <div className="w-full flex flex-row justify-between mb-10">
-              <SearchBar
-              />
+              <SearchBar />
               <Dropdown
-                values={sortOptions}
-              />
+                values={sortOptions} />
             </div>
             <RecipeList />
           </div>
